@@ -28,25 +28,53 @@ namespace csharp_test
             driver.FindElement(By.Name("password")).SendKeys("admin");
             driver.FindElement(By.Name("login")).Click();
             wait.Until(ExpectedConditions.TitleIs("My Store"));
-            driver.FindElement(By.LinkText("Appearence")).Click();
-            IWebElement tagH1Template = driver.FindElement(By.TagName("h1"));
-            NUnit.Framework.Assert.AreEqual(tagH1Template.Text, "Template");
 
-            driver.FindElement(By.LinkText("Logotype")).Click();
-            IWebElement tagH1Logotype = driver.FindElement(By.TagName("h1"));
-            NUnit.Framework.Assert.AreEqual(tagH1Logotype.Text, "Logotype");
 
-            driver.FindElement(By.XPath("//ul[@id='box-apps-menu']/li[2]//span[@class='name']")).Click();
-            IWebElement tagH1Catalog = driver.FindElement(By.TagName("h1"));
-            NUnit.Framework.Assert.AreEqual(tagH1Catalog.Text, "Catalog");
+            int mainMenuItemPosition = 1;
+            int childMenuItemPosition = 1;
 
-            driver.FindElement(By.LinkText("Product Groups")).Click();
-            IWebElement tagH1ProductGroups = driver.FindElement(By.TagName("h1"));
-            NUnit.Framework.Assert.AreEqual(tagH1ProductGroups.Text, "Product Groups");
+            while (true)
+            {
 
-            driver.FindElement(By.CssSelector("[href='http\\:\\/\\/localhost\\/litecart\\/admin\\/\\?app\\=countries\\&doc\\=countries'] .name")).Click();
-            IWebElement tagH1Countries = driver.FindElement(By.TagName("h1"));
-            NUnit.Framework.Assert.AreEqual(tagH1Countries.Text, "Countries");
+                String mainMenuItemCssLocator = "ul#box-apps-menu li#app-:nth-child(" + mainMenuItemPosition + ")";
+                
+
+                    if(IsElementPresent(By.CssSelector(mainMenuItemCssLocator)))
+                    {
+                        IWebElement mainMenuItem = driver.FindElement(By.CssSelector(mainMenuItemCssLocator));
+                        mainMenuItem.Click();
+                        driver.FindElement(By.CssSelector("h1"));
+                    }
+                    else
+                    {
+                    return;                    
+                    }
+
+                while (true)
+                {
+
+                    String childMenuItemCssLocator = "ul li:nth-child(" + childMenuItemPosition + ")";
+                    
+
+                    if (IsElementPresent(By.CssSelector(mainMenuItemCssLocator +
+                        " " + childMenuItemCssLocator)))
+                    {
+                        IWebElement childMenuItem = driver.FindElement(By.CssSelector(mainMenuItemCssLocator +
+                        " " + childMenuItemCssLocator));
+                        childMenuItem.Click();
+                        driver.FindElement(By.CssSelector("h1"));                        
+                    }
+                    else
+                    {
+                        break;                        
+                    }
+
+                    childMenuItemPosition++;
+                }
+                childMenuItemPosition = 1;
+                mainMenuItemPosition++;
+            }
+            
         }
 
         [TearDown]
@@ -54,6 +82,19 @@ namespace csharp_test
         {
             driver.Quit();
             driver = null;
+        }
+
+        private bool IsElementPresent(By by)
+        {
+            try
+            {
+                driver.FindElement(by);
+                return true;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
         }
     }
 }
