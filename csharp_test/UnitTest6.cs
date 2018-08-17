@@ -36,6 +36,11 @@ namespace csharp_test
             String campaignPriceMainStyleText = campaignDuck.FindElement(By.CssSelector("strong.campaign-price")).GetCssValue("font-size");
             String campaignPriceMainStyleColor = campaignDuck.FindElement(By.CssSelector("strong.campaign-price")).GetCssValue("color");
 
+            NUnit.Framework.Assert.AreEqual(regularPriceMainStyleText, "line-through");
+            NUnit.Framework.Assert.AreEqual(regularPriceMainStyleColor, "rgba(119, 119, 119, 1)");
+            NUnit.Framework.Assert.AreEqual(campaignPriceMainStyleText, "18px");
+            NUnit.Framework.Assert.AreEqual(campaignPriceMainStyleColor, "rgba(204, 0, 0, 1)");
+
             campaignDuck.Click();
 
             IWebElement tagH1Product = driver.FindElement(By.TagName("h1"));
@@ -51,7 +56,7 @@ namespace csharp_test
             String campaignPriceStyleText = driver.FindElement(By.CssSelector("strong.campaign-price")).GetCssValue("font-size");
 
             NUnit.Framework.Assert.AreEqual(campaignProductNameMain, tagH1Product.Text); // Product Name from main page equals Name from product subpage
-            NUnit.Framework.Assert.AreNotEqual(regularPriceMain, regularPriceProductPage); // Product regular price from main page equals regular price from product subpage
+            NUnit.Framework.Assert.AreEqual(regularPriceMain, regularPriceProductPage); // Product regular price from main page equals regular price from product subpage
             NUnit.Framework.Assert.AreEqual(campaignPriceMain, campaignPriceProductPage); // Product discount price from main page equals discount price from product subpage
 
             NUnit.Framework.Assert.AreEqual(regularPriceStyleText, "line-through");
