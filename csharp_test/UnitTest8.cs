@@ -108,15 +108,11 @@ namespace csharp_test
 
         }
 
-
-
-
-
         [TearDown]
         public void Stop()
         {
-            //driver.Quit();
-            //driver = null;
+            driver.Quit();
+            driver = null;
         }
     }
 }
